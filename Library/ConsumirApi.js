@@ -1,15 +1,12 @@
-const API = 'https://pokeapi.co/api/v2/pokemon/'
+const API = 'https://hp-api.onrender.com/api/characters'
 
-function traerPokemon(id) {
-    const url = `${API}${id}`
-    return fetch(url)
-        .then(respuesta => respuesta.json())
-        .then(datos => {
-        return datos;
-        })
-        .catch(error => {
-        console.error( 'Se produjo un error: ', error); 
-        });
-};
+const traer = async() => {
+    const consulta = await fetch(API)
+        .then(a => a.json())
+        .then(a => console.log(a))
+        .catch(err => console.log(err))
 
-export default traerPokemon
+    return consulta
+}
+
+export default traer

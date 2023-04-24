@@ -1,40 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
-
-
-const API = 'https://pokeapi.co/api/v2/pokemon/';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
+import traer from './Library/ConsumirApi';
 
 export default function App() {
-  const [pokemonList, setPokemonList] = useState([]);
+  const [personajes, setPersonajes] = useState([]);
 
-  const handleButtonPress = async () => {
-    try {
-      const response = await fetch(`${API}?limit=20`);
-      const data = await response.json();
-      const pokemonNames = data.results.map(pokemon => pokemon.name);
-      setPokemonList(pokemonNames);
-    } catch (error) {
-      console.error('Se produjo un error: ', error);
-    }
+  const cargarPersonajes = async () => {
+    const resultado = await traer();
+    setPersonajes(resultado);
   };
 
-  const renderItem = ({ item }) => (
-    <View style={{ paddingVertical: 10 }}>
-      <Text>{item}</Text>
-    </View>
-  );
+  useEffect(() => {
+    cargarPersonajes();
+  }, []);
+
+  const renderizarPersonaje = ({ item }) => {
+    return (
+      <View style={styles.tarjeta} key={item.name}>
+        <Image style={styles.imagen} source={{ uri: item.image }} />
+        <Text style={styles.nombre}>{item.name}</Text>
+      </View>
+    );
+  };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <TouchableOpacity onPress={handleButtonPress}>
-        <Text style={{ fontSize: 20 }}>Mostrar Pokemones</Text>
-      </TouchableOpacity>
+    <View style={styles.container}>
       <FlatList
-        data={pokemonList}
-        renderItem={renderItem}
-        keyExtractor={item => item}
-        style={{ marginTop: 20 }}
+        data={personajes}
+        renderItem={renderizarPersonaje}
+        keyExtractor={(item) => item.name}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tarjeta: {
+    backgroundColor: '#F2F2F2',
+    padding: 20,
+    borderRadius: 5,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  imagen: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+  },
+  nombre: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
