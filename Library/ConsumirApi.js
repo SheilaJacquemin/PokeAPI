@@ -1,12 +1,15 @@
-const API = 'https://hp-api.onrender.com/api/characters'
+const API = 'https://hp-api.onrender.com/api/characters';
 
 const traer = async() => {
-    const consulta = await fetch(API)
-        .then(a => a.json())
-        .then(a => console.log(a))
-        .catch(err => console.log(err))
+  const respuesta = await fetch(API);
+  const personajes = await respuesta.json();
+  const nombresEImagenes = personajes.map((personaje) => {
+      return {
+          nombre: personaje.name,
+          imagen: personaje.image
+        };
+    });
+  return nombresEImagenes;
+};
 
-    return consulta
-}
-
-export default traer
+export default traer;
