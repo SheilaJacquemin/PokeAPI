@@ -1,4 +1,4 @@
-const API = 'https://hp-api.onrender.com/api/characters';
+const API = 'https://hp-api.onrender.com/api/characters/?limit=20';
 
 const traer = async() => {
   const respuesta = await fetch(API);
